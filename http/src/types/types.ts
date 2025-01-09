@@ -23,6 +23,10 @@ export const transferMoney = z.object({
     amount: z.number()
 })
 
+export const topUp = z.object({
+    amount: z.number()
+})
+
 declare global{
     namespace Express {
         interface Request {

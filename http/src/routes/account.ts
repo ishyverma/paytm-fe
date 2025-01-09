@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { prisma } from "../lib/prisma";
 import { authMiddleware } from "../lib/middleware";
-import { transferMoney } from "../types/types";
+import { topUp, transferMoney } from "../types/types";
 
 export const accountRouter = Router();
 
@@ -22,7 +22,37 @@ accountRouter.get("/balance", authMiddleware, async (req: Request, res: Response
     })
 })
 
-accountRouter.post("/transfer", async (req: Request, res: Response) => {
+accountRouter.post("/balance", authMiddleware, async (req: Request, res: Response) => {
+    const parsedData = topUp.safeParse(req.body)
+    if(!parsedData.success) {
+        res.status(404).json({
+            message: "Wrong data sent by the user"
+        })
+        return
+    }
+    const { amount } = parsedData.data
+    try {
+        const balance = await prisma.account.update({
+            where: {
+                userId: req.userId
+            },
+            data: {
+                balance: {
+                    increment: amount
+                }
+            }
+        })
+        res.json({
+            balance: balance.balance
+        })
+    } catch (e) {
+        res.status(411).json({
+            message: "Error occured while topping up"
+        })
+    }
+})
+
+accountRouter.post("/transfer", authMiddleware, async (req: Request, res: Response) => {
     const parsedData = transferMoney.safeParse(req.body)
     if(!parsedData.success) {
         res.status(404).json({
@@ -34,13 +64,18 @@ accountRouter.post("/transfer", async (req: Request, res: Response) => {
     const { to, amount } = parsedData.data
 
     try {
+        const userGetting = await prisma.account.findFirst({
+            where: {
+                userId: to
+            }
+        })
         const userSending = await prisma.account.findFirst({
             where: {
                 userId: req.userId
             }
         })
-
-        if(!userSending || userSending.balance < amount) {
+        console.log(userSending)
+        if(!userSending || !userGetting || userSending.balance < amount) {
             res.status(400).json({
                 message: "Insufficient balance"
             })
@@ -60,7 +95,7 @@ accountRouter.post("/transfer", async (req: Request, res: Response) => {
             }),
             prisma.account.update({
                 where: {
-                    id: req.userId
+                    userId: req.userId
                 },
                 data: {
                     balance: {
@@ -74,7 +109,7 @@ accountRouter.post("/transfer", async (req: Request, res: Response) => {
         })
     } catch (e) {
         res.status(411).json({
-            message: "Invalid account"
+            e
         })
     }
 })
