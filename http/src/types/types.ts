@@ -18,6 +18,11 @@ export const updateUser = z.object({
     lastName: z.string().min(3, "Min length of lastname should be 3").max(30, "Max length of lastname should be 30").optional()
 })
 
+export const transferMoney = z.object({
+    to: z.number(),
+    amount: z.number()
+})
+
 declare global{
     namespace Express {
         interface Request {
