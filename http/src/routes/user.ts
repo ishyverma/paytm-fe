@@ -24,7 +24,12 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
                 username,
                 firstName,
                 lastName,
-                password: hashedPassword
+                password: hashedPassword,
+                account: {
+                    create: {
+                        balance: 0
+                    }
+                }
             }
         })
         res.json({
