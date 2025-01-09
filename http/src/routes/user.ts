@@ -90,13 +90,14 @@ userRouter.put("/", authMiddleware, async (req: Request, res: Response) => {
     }
     const { password, firstName, lastName } = parsedData.data
     const userId = req.userId
+    const hashedPassword = await bcrypt.hash(password as string, 5)
     try {
         const user = await prisma.user.update({
             where: {
                 id: userId
             },
             data: {
-                password,
+                password: hashedPassword,
                 firstName,
                 lastName
             }
@@ -115,7 +116,18 @@ userRouter.get("/bulk", async (req: Request, res: Response) => {
     const { filter } = req.query;
     const users = await prisma.user.findMany({
         where: {
-            firstName: filter as string
+            OR: [
+                {
+                    firstName: {
+                        startsWith: filter as string
+                    }
+                },
+                {
+                    lastName: {
+                        startsWith: filter as string
+                    }
+                }
+            ]
         },
         select: {
             id: true,
