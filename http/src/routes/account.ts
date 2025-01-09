@@ -6,10 +6,9 @@ import { transferMoney } from "../types/types";
 export const accountRouter = Router();
 
 accountRouter.get("/balance", authMiddleware, async (req: Request, res: Response) => {
-    const userId = req.userId
     const balance = await prisma.account.findFirst({
         where: {
-            userId
+            userId: req.userId
         }
     })
     if(!balance) {
