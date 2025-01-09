@@ -124,12 +124,12 @@ userRouter.get("/bulk", async (req: Request, res: Response) => {
             OR: [
                 {
                     firstName: {
-                        startsWith: filter as string
+                        contains: filter as string
                     }
                 },
                 {
                     lastName: {
-                        startsWith: filter as string
+                        contains: filter as string
                     }
                 }
             ]
