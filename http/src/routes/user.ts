@@ -1,9 +1,10 @@
 import { Request, Response, Router } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { signinType, signupType } from "../types/types";
+import { signinType, signupType, updateUser } from "../types/types";
 import { prisma } from "../lib/prisma";
 import { JWT_SECRET } from "../config";
+import { authMiddleware } from "../lib/middleware";
 
 export const userRouter = Router();
 
@@ -77,4 +78,62 @@ userRouter.post("/signin", async (req: Request, res: Response) => {
             message: "Error while logging in"
         })
     }
+})
+
+userRouter.put("/", authMiddleware, async (req: Request, res: Response) => {
+    const parsedData = updateUser.safeParse(req.body);
+    if(!parsedData.success) {
+        res.status(404).json({
+            message: "Wrong data sent by the user"
+        })
+        return
+    }
+    const { password, firstName, lastName } = parsedData.data
+    const userId = req.userId
+    try {
+        const user = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                password,
+                firstName,
+                lastName
+            }
+        })
+        res.json({
+            message: "Updated successfully"
+        })
+    } catch (e) {
+        res.status(411).json({
+            message: "Error while updating information"
+        })
+    }
+})
+
+userRouter.get("/bulk", async (req: Request, res: Response) => {
+    const { filter } = req.query;
+    const users = await prisma.user.findMany({
+        where: {
+            firstName: filter as string
+        },
+        select: {
+            id: true,
+            username: true,
+            firstName: true,
+            lastName: true,
+        }
+    })
+
+    if(users.length == 0) {
+        res.status(404).json({
+            message: `No user found with name ${filter}`
+        })
+        return
+    }
+
+    res.json({
+        users
+    })
+
 })
