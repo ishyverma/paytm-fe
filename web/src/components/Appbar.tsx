@@ -20,10 +20,7 @@ export function AppBar() {
         }
       })
       .then((response) => {
-        console.log("shdjshdkskdhskdjsd", response.data.user)
         setInfo(response.data.user);
-      }).then(() => {
-        console.log(info?.firstName)
       })
   }, []);
   return (
