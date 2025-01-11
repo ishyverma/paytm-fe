@@ -180,10 +180,7 @@ userRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
             }
         })
         res.json({
-            firstName: user?.firstName,
-            lastName: user?.lastName,
-            username: user?.username,
-            account: user?.account[0].balance
+            user
         })
     } catch (e) {
         res.status(411).json({
