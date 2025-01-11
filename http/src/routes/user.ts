@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { signinType, signupType, updateUser } from "../types/types";
 import { prisma } from "../lib/prisma";
-import { JWT_SECRET } from "../config";
 import { authMiddleware } from "../lib/middleware";
 
 export const userRouter = Router();
@@ -74,7 +73,7 @@ userRouter.post("/signin", async (req: Request, res: Response) => {
             return
         }
 
-        const token = jwt.sign({ userId: user.id }, JWT_SECRET)
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string)
         res.json({
             token
         })
