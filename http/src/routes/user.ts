@@ -117,7 +117,7 @@ userRouter.put("/", authMiddleware, async (req: Request, res: Response) => {
     }
 })
 
-userRouter.get("/bulk", async (req: Request, res: Response) => {
+userRouter.get("/bulk", authMiddleware, async (req: Request, res: Response) => {
     const { filter } = req.query;
     const users = await prisma.user.findMany({
         where: {
@@ -142,15 +142,27 @@ userRouter.get("/bulk", async (req: Request, res: Response) => {
         }
     })
 
+    const filteredUsers = users.filter(u => u.id !== req.userId);
+    
     if(users.length == 0) {
         res.json({
-            users
+            users: filteredUsers.map(u => ({
+                firstName: u.firstName,
+                lastName: u.lastName,
+                id: u.id,
+                username: u.username
+            }))
         })
         return
     }
-
+    
     res.json({
-        users
+        users: filteredUsers.map(u => ({
+            firstName: u.firstName,
+            lastName: u.lastName,
+            id: u.id,
+            username: u.username
+        }))
     })
 
 })
