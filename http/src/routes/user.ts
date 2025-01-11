@@ -187,6 +187,7 @@ userRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
             firstName: user?.firstName,
             lastName: user?.lastName,
             username: user?.username,
+            // @ts-ignore
             account: user?.account.filter(a => ({balance: a.balance}))
         })
     } catch (e) {
