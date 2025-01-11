@@ -49,7 +49,7 @@ export default function Signin() {
                 setLoading(true);
                 try {
                 const response = await axios.post(
-                    "http://localhost:3001/api/v1/user/signin",
+                    "https://paytm-olc5.onrender.com/api/v1/user/signin",
                     {
                     username,
                     password,
@@ -59,7 +59,8 @@ export default function Signin() {
                 toast.success("Signed in successfully");
                 setLoading(false);
                 router.push("/dashboard");
-                } catch (e: any) {
+                } catch (e) {
+                  // @ts-expect-error this is the error
                 toast.error(e.response.data.message);
                 setLoading(false);
                 }
@@ -69,7 +70,7 @@ export default function Signin() {
             />
         </div>
         <div className="mt-4 flex justify-end text-sm">
-          Don't have an account?
+          Dont have an account?
           <span
             onClick={() => {
               router.push("/signup");

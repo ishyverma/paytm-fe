@@ -70,7 +70,7 @@ export default function Signup() {
                 setLoading(true);
                 try {
                 const response = await axios.post(
-                    "http://localhost:3001/api/v1/user/signup",
+                    "https://paytm-olc5.onrender.com/api/v1/user/signup",
                     {
                     firstName,
                     lastName,
@@ -81,7 +81,8 @@ export default function Signup() {
                 toast.success(response.data.message);
                 setLoading(false);
                 router.push("/signin");
-                } catch (e: any) {
+                } catch (e) {
+                  // @ts-expect-error this is the error
                 toast.error(e.response.data.message);
                 setLoading(false);
                 }

@@ -1,11 +1,11 @@
 export function rupeeConverter(balance: {
     balance: number;
 }) {
-    let format = new Intl.NumberFormat('en-IN', {
+    const format = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
         minimumFractionDigits: 2,
     });
-    // @ts-ignore
+    // @ts-expect-error this is the error
     return format.format(balance)
 }

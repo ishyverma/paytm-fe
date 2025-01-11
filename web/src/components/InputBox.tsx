@@ -5,7 +5,8 @@ interface InputBoxType {
     inputType: "text" | "password";
     placeholder: string;
     width?: string;
-    onBlur?: (e: any) => void;
+    // @ts-expect-error this is the error
+    onBlur?: (e) => void;
 }
 
 export default function InputBox({ label, inputType, placeholder, width, onBlur }: InputBoxType) {

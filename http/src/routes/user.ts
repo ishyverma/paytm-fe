@@ -168,7 +168,7 @@ userRouter.get("/bulk", authMiddleware, async (req: Request, res: Response) => {
 
 userRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
     try {
-        const user = await prisma.user.findFirst({
+        const user = await prisma.user.findUnique({
             where: {
                 id: req.userId
             },
@@ -176,19 +176,14 @@ userRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
                 firstName: true,
                 lastName: true,
                 username: true,
-                account: {
-                    select: {
-                        balance: true
-                    }
-                }
+                account: true
             }
         })
         res.json({
             firstName: user?.firstName,
             lastName: user?.lastName,
             username: user?.username,
-            // @ts-ignore
-            account: user?.account.filter(a => ({balance: a.balance}))
+            account: user?.account[0].balance
         })
     } catch (e) {
         res.status(411).json({

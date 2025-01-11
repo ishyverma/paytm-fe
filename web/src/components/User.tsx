@@ -14,7 +14,7 @@ export default function User() {
   const router = useRouter();
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/api/v1/user/bulk?filter=${debouncedValue}`, {
+      .get(`https://paytm-olc5.onrender.com/api/v1/user/bulk?filter=${debouncedValue}`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -29,7 +29,6 @@ export default function User() {
         <span className="font-bold">Users</span>
       </div>
       <div>
-        {/* @ts-ignore */}
         <input
           onChange={(e) => {
             setInputVal(e.target.value);

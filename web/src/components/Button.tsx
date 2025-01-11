@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 interface ButtonType {
     label?: string;
     icon?: React.ReactElement
-    onClick?: any;
+    onClick?: () => void;
 }
 
 export default function Button({ label, icon, onClick }: ButtonType) {

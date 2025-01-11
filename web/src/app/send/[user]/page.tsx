@@ -55,7 +55,7 @@ export default function Send() {
             onClick={async () => {
                 setLoading(true)
                 try {
-                    const response = await axios.post("http://localhost:3001/api/v1/account/transfer", {
+                    const response = await axios.post("https://paytm-olc5.onrender.com/api/v1/account/transfer", {
                         to: parseInt(params as string),
                         amount: money
                     }, {
@@ -65,8 +65,9 @@ export default function Send() {
                     })
                     setLoading(false)
                     toast.success(response.data.message)
-                } catch (e: any) {
+                } catch (e) {
                     setLoading(false)
+                    // @ts-expect-error this is the error
                     toast.error(e.response.data.message);
                 }
             }} label={loading ? "" : "Initiate Transaction"} icon={loading ? <Loading /> : <RightArrow />} />

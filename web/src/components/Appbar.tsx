@@ -10,19 +10,20 @@ import { useRouter } from "next/navigation";
 
 export function AppBar() {
   const [info, setInfo] = useState<null | UserInfoType>(null);
-  const [allUsers, setUsers] = useState("");
   const [open, setOpen] = useState(false);
   const router = useRouter()
   useEffect(() => {
     axios
-      .get("http://localhost:3001/api/v1/user/me", {
+      .get("https://paytm-olc5.onrender.com/api/v1/user/me", {
         headers: {
           authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        }
       })
       .then((response) => {
         setInfo(response.data);
-      });
+        console.log(response.data)
+      })
+      .catch(e => {console.log(e)});
   }, []);
   return (
     <div>
@@ -67,7 +68,7 @@ export function AppBar() {
         <div>
           <span>
             {
-              // @ts-ignore
+              // @ts-expect-error this is the error
               rupeeConverter(info?.account[0].balance | 0)
             }
           </span>

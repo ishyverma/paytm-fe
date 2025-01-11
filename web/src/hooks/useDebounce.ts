@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useDebounce(params: string) {
-    const [value, setValue] = useState<any>(params);
+    const [value, setValue] = useState<string>(params);
     useEffect(() => {
         const handler = setTimeout(() => {
             setValue(params)
