@@ -20,10 +20,11 @@ export function AppBar() {
         }
       })
       .then((response) => {
-        setInfo(response.data);
-        console.log(response.data)
+        console.log("shdjshdkskdhskdjsd", response.data.user)
+        setInfo(response.data.user);
+      }).then(() => {
+        console.log(info?.firstName)
       })
-      .catch(e => {console.log(e)});
   }, []);
   return (
     <div>
@@ -69,7 +70,7 @@ export function AppBar() {
           <span>
             {
               // @ts-expect-error this is the error
-              rupeeConverter(info?.account[0].balance | 0)
+              rupeeConverter(info?.account.balance | 0)
             }
           </span>
         </div>
@@ -82,5 +83,9 @@ interface UserInfoType {
   firstName: string;
   lastName: string;
   username: string;
-  account: { balance: number }[];
+  account: {
+    id: number;
+    userId: number;
+    balance: number;
+  }
 }
