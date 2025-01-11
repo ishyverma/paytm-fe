@@ -143,8 +143,8 @@ userRouter.get("/bulk", async (req: Request, res: Response) => {
     })
 
     if(users.length == 0) {
-        res.status(404).json({
-            message: `No user found with name ${filter}`
+        res.json({
+            users
         })
         return
     }
@@ -153,4 +153,34 @@ userRouter.get("/bulk", async (req: Request, res: Response) => {
         users
     })
 
+})
+
+userRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                id: req.userId
+            },
+            select: {
+                firstName: true,
+                lastName: true,
+                username: true,
+                account: {
+                    select: {
+                        balance: true
+                    }
+                }
+            }
+        })
+        res.json({
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+            username: user?.username,
+            account: user?.account.filter(a => ({balance: a.balance}))
+        })
+    } catch (e) {
+        res.status(411).json({
+            message: "There is an error"
+        })
+    }
 })
