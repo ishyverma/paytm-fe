@@ -62,6 +62,13 @@ accountRouter.post("/transfer", authMiddleware, async (req: Request, res: Respon
     }
 
     const { to, amount } = parsedData.data
+    
+    if(amount == 0) {
+        res.status(404).json({
+            message: "Please enter a valid amount"
+        })
+        return
+    }
 
     try {
         const userGetting = await prisma.account.findFirst({
