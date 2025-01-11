@@ -192,7 +192,7 @@ userRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
         })
     } catch (e) {
         res.status(411).json({
-            message: "There is an error"
+            e: e
         })
     }
 })
